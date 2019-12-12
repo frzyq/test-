@@ -1,0 +1,111 @@
+from appium import webdriver
+from appium.webdriver.common.touch_action import TouchAction
+import os
+from appium.webdriver.common.touch_action import TouchAction
+import time
+desired_caps={}
+desired_caps['platformName'] = 'Android'
+desired_caps['deviceName'] = 'OPPO reno'
+desired_caps['udid'] = 'cb42db10'
+#desired_caps['app']=r"D:\My Documents\Desktop\pylx\com.baidu.searchbox.apk"
+desired_caps['platformVersion'] = '8.1.0'
+desired_caps['appPackage'] ='com.coloros.filemanager'
+desired_caps['appActivity'] = 'com.coloros.filemanager.Main'
+#desired_caps['unicodeKeyboard']=True
+#desired_caps['resetKeyboard']=True
+desired_caps['noReset']=True
+desired_caps['newCommandTimeout']=6000  #与appium链接时间6千秒
+
+
+def getSize():
+    x = driver.get_window_size()['width']
+    y = driver.get_window_size()['height']
+    return (x, y)
+def swipeUp(t):
+    l = getSize()
+    x1 = int(l[0] * 0.5)    #x坐标
+    y1 = int(l[1] * 0.75)   #起始y坐标
+    y2 = int(l[1] * 0.25)   #终点y坐标
+    driver.swipe(x1, y1, x1, y2,t)
+
+def swipeDown(t):
+    l = getSize()
+    x1 = int(l[0] * 0.5)  #x坐标
+    y1 = int(l[1] * 0.25)   #起始y坐标
+    y2 = int(l[1] * 0.75)   #终点y坐标
+    driver.swipe(x1, y1, x1, y2,t)
+
+def swipright(t):
+    l=getSize()
+    x1=int(l[0]*0.95)
+    y1=int(l[1]*0.5)
+    x2=int(l[0]*0.05)
+    driver.swipe(x1,y1,x2,y1,t)
+
+
+def swipLeft (t):
+    l= getSize()
+    x1=int(l[0]*0.05)
+    y1=int(l[1]*0.5)
+    x2=int(l[0]*0.95)
+    driver.swipe(x1,y1,x2,y1,t)
+
+
+
+driver=webdriver.Remote(r'http://localhost:4723/wd/hub',desired_caps)
+driver.implicitly_wait(10)
+
+for one in range(15):
+    try:
+        driver.find_element_by_id("com.coloros.filemanager:id/action_document").click()
+        time.sleep(1)
+        for a in range(5):
+            swipright(1000)
+        time.sleep(1)
+        for b in range(5):
+            swipLeft(1000)
+        time.sleep(1)
+        driver.find_element_by_id("com.coloros.filemanager:id/actionbar_edit").click()#选择
+        time.sleep(1)
+        # driver.find_element_by_id("com.coloros.filemanager:id/actionbar_ftp").click()
+        # driver.find_element_by_xpath('//android.widget.ImageButton[@content-desc="向上导航"]').click()
+        driver.find_element_by_id("com.coloros.filemanager:id/action_select_all").click()
+        time.sleep(1)
+        driver.find_element_by_xpath('//android.widget.Button[@content-desc="复制"]').click()
+        time.sleep(1)
+        driver.find_element_by_xpath('//android.widget.FrameLayout[@content-desc="请选择存储位置：向上导航"]/android.widget.ImageView').click()
+        time.sleep(1)
+        #到分类视图
+        driver.find_element_by_android_uiautomator('new UiSelector().text("手机存储")').click()#进入手机存储
+        # driver.find_element_by_id("com.coloros.filemanager:id/action_file_browser").click()
+        time.sleep(2)
+        driver.find_element_by_xpath('//android.widget.Button[@content-desc="新建文件夹"]').click()#新建文件夹
+        time.sleep(3)
+        driver.find_element_by_xpath('/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.LinearLayout/android.widget.Button[2]').click()#保存
+        time.sleep(3)
+        driver.find_element_by_android_uiautomator('new UiSelector().text("新建文件夹")').click()#进入文件夹
+        time.sleep(3)
+       # driver.find_element_by_android_uiautomator('new UiSelector().text("粘贴")').click()
+        driver.find_element_by_xpath('//android.widget.Button[@content-desc="粘贴"]').click()
+        time.sleep(3)
+        for a in range(5):
+            swipeUp(1000)
+        time.sleep(2)
+        for a in range(7):
+            swipeDown(1000)
+        time.sleep(2)
+        driver.find_element_by_id('com.coloros.filemanager:id/root_path').click()
+        time.sleep(1)
+        a = driver.find_element_by_android_uiautomator('new UiSelector().text("新建文件夹")')
+        TouchAction(driver).long_press(a).perform()
+        time.sleep(1)
+        driver.find_element_by_xpath('/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[1]/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout[1]').click()
+        time.sleep(1)
+        driver.find_element_by_id('android:id/button3').click()
+        time.sleep(2)
+        #driver.find_element_by_xpath('//android.widget.FrameLayout[@content-desc="手机存储：向上导航"]').click()
+        driver.find_element_by_xpath(
+            '//android.widget.FrameLayout[@content-desc="手机存储：向上导航"]/android.widget.ImageView').click()
+        time.sleep(1)
+    except:
+        print("第一条用例file")
